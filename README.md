@@ -15,7 +15,7 @@
 
 ```python
 
-# creatin Classroom:
+# creating Classroom:
 method - POST
 ENDPOINT - your_localhost/classroom/new
 Request params : 
