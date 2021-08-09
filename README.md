@@ -11,7 +11,7 @@
 ```
 ## Usage
 
-*adding header "api-token" - "123qweasdzxc" to all request
+*add header "api-token" - "123qweasdzxc" to all request
 
 ```python
 
