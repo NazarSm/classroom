@@ -4,7 +4,7 @@
 ```bash
 1) git clone
 2) composer install
-3) settings .env file
+3) configure .env file
 4) symfony doctrine:migrations:migrate
 5) symfony doctrine:fixtures:load
 
