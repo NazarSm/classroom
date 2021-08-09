@@ -48,15 +48,12 @@ class ClassroomController extends AbstractController
      */
     public function list(Request $request, PaginatorInterface $paginator): JsonResponse
     {
-        $classrooms = $this->classroomRepository->findAll();
+        $page = $request->query->getInt('page', 1);
+        $perPage = $request->query->getInt('perPage', 10);
 
-        $pagination = $paginator->paginate(
-            $classrooms,
-            $request->get('page', 1),
-            $request->get('perPage', 10)
-        );
+        $classrooms = $this->classroomRepository->paginate($page, $perPage);
 
-        return $this->json($pagination);
+        return $this->json($classrooms);
     }
 
     /**
@@ -75,7 +72,6 @@ class ClassroomController extends AbstractController
                 new Type(['type' => 'string']),
             ],
             'is_active' => [
-                new NotBlank(),
                 new Type(['type' => 'boolean'])
             ],
         ]);

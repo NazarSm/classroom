@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Entity\Classroom;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\NoopWordInflector;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -40,11 +42,9 @@ class ClassroomService
     {
         $classroom = new Classroom();
 
-        $classroom->setName($data['name']);
-        $classroom->setCreatedAt(date_create());
-        $classroom->setIsActive($data['is_active']);
-
+        $classroom = $this->setParameters($classroom, $data);
         $this->entityManager->persist($classroom);
+
         $this->entityManager->flush();
     }
 
@@ -56,9 +56,9 @@ class ClassroomService
      */
     public function update(array $data, Classroom $classroom)
     {
-        $classroom = $classroom->setParameters($data);
-
+        $classroom = $this->setParameters($classroom, $data);
         $this->entityManager->persist($classroom);
+
         $this->entityManager->flush();
     }
 
@@ -70,5 +70,26 @@ class ClassroomService
     {
         $this->entityManager->remove($classroom);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param Classroom $classroom
+     * @param array $params
+     * @return Classroom
+     */
+    public function setParameters(Classroom $classroom, array $params): Classroom
+    {
+        $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
+
+        foreach ($params as $key => $value) {
+
+            $field = $inflector->camelize($key);
+
+            if (property_exists($classroom, $key)) {
+                $classroom->{'set' . ucfirst($field)}($value);
+            }
+        }
+
+        return $classroom;
     }
 }

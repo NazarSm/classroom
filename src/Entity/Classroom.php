@@ -3,15 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\ClassroomRepository;
+use DateTime;
 use Doctrine\Inflector\Inflector;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Inflector\NoopWordInflector;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ClassroomRepository::class)
  */
 class Classroom
 {
+    use TimestampableEntity;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -20,19 +23,25 @@ class Classroom
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
-    /**
+    /***
      * @ORM\Column(type="date")
      */
-    private $created_at;
+    protected $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $is_active;
+
+    /***
+     * @ORM\Column(type="date")
+     */
+    protected $updatedAt;
+
 
     public function getId(): ?int
     {
@@ -53,12 +62,24 @@ class Classroom
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -71,26 +92,6 @@ class Classroom
     public function setIsActive(bool $is_active): self
     {
         $this->is_active = $is_active;
-
-        return $this;
-    }
-
-    /**
-     * @param array $params
-     * @return $this
-     */
-    public function setParameters(array $params): Classroom
-    {
-        $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
-
-        foreach ($params as $key => $value) {
-
-            $field = $inflector->camelize($key);
-
-            if (property_exists($this, $key)) {
-                $this->{'set' . ucfirst($field)}($value);
-            }
-        }
 
         return $this;
     }

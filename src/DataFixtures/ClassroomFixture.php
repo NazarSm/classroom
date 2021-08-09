@@ -16,7 +16,6 @@ class ClassroomFixture extends Fixture
         for ($i = 0; $i < 21; $i++) {
             $classroom = new Classroom();
             $classroom->setName(sprintf('Classroom №%s', $i + 1));
-            $classroom->setCreatedAt(date_create());
             $classroom->setIsActive($generator->boolean);
             $manager->persist($classroom);
         }
